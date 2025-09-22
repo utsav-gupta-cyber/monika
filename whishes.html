@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Sister</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #ffe6f2, #fff);
+      text-align: center;
+      color: #ff69b4;
+      overflow-x: hidden;
+    }
+    .container {
+      padding: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .message {
+      font-size: 28px;
+      margin-top: 40px;
+      min-height: 40px;
+    }
+    #startBtn {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 18px;
+      background: #ff69b4;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    #startBtn.show {
+      opacity: 1;
+    }
+    .slideshow {
+      margin-top: 30px;
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      height: 460px;
+      margin-left: auto;
+      margin-right: auto;
+      z-index: 2;
+    }
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) rotate(0deg);
+      width: 320px;
+      height: 420px;
+      object-fit: cover;
+      background: #fff;
+      border: 8px solid #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .final-message {
+      font-size: 26px;
+      margin-top: 40px;
+      min-height: 30px;
+    }
+    /* Balloons background */
+    .balloon {
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: float 6s ease-in-out infinite;
+      z-index: 1;
+    }
+    .balloon:after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -20px;
+      width: 2px;
+      height: 20px;
+      background: #555;
+    }
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-40px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Balloons will be injected here -->
+  <div id="balloons"></div>
+
+  <div class="container">
+    <!-- First Birthday Message -->
+    <div class="message" id="message"></div>
+
+    <!-- Button (appears after 5s) -->
+    <button id="startBtn">🎶 Play Music & Show Memories 🎶</button>
+
+    <!-- Slideshow -->
+    <div class="slideshow" id="slideshow">
+      <img src="photo1.jpg" class="slide">
+      <img src="photo2.jpg" class="slide">
+      <img src="photo3.jpg" class="slide">
+      <img src="photo4.jpg" class="slide">
+      <img src="photo5.jpg" class="slide">
+      <img src="photo6.jpg" class="slide">
+      <img src="photo7.jpg" class="slide">
+      <img src="photo8.jpg" class="slide">
+      <img src="photo9.jpg" class="slide">
+      <img src="photo10.jpg" class="slide">
+      <img src="photo11.jpg" class="slide">
+      <img src="photo12.jpg" class="slide">
+      <img src="photo13.jpg" class="slide">
+      <img src="photo14.jpg" class="slide">
+      <img src="photo15.jpg" class="slide">
+      <img src="photo16.jpg" class="slide">
+      <img src="photo17.jpg" class="slide">
+      <img src="photo18.jpg" class="slide">
+      <img src="photo19.jpg" class="slide">
+      <img src="photo20.jpg" class="slide">
+    </div>
+
+    <!-- Final Wish -->
+    <div class="final-message" id="finalMessage"></div>
+  </div>
+
+  <!-- Background Music -->
+  <audio id="bgm" src="song.mp3"></audio>
+
+  <script>
+    // Typewriter effect
+    function typeWriter(el, text, speed=100, callback=null) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          el.textContent += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        } else if (callback) {
+          callback();
+        }
+      }
+      typing();
+    }
+
+    // First message
+    const messageEl = document.getElementById("message");
+    typeWriter(messageEl, "🎉 Happy Birthday My Dear Sister 🎉", 100, () => {
+      // After typing, wait 5s then show button
+      setTimeout(() => {
+        document.getElementById("startBtn").classList.add("show");
+      }, 5000);
+    });
+
+    const startBtn = document.getElementById("startBtn");
+    const slides = document.querySelectorAll(".slide");
+    const music = document.getElementById("bgm");
+    let current = 0;
+    const angles = [-6, 6, -4, 8, -8, 10, -5, 7, -7, 5, -9, 9, -3, 11, -6, 4, -10, 8, -8, 6];
+
+    startBtn.addEventListener("click", () => {
+      // ✅ Manual play (safe for policy)
+      music.play().then(() => {
+        console.log("Music started manually ✅");
+      }).catch(err => {
+        console.log("Music play failed:", err);
+      });
+
+      // Hide button
+      startBtn.style.display = "none";
+
+      // Start slideshow
+      showSlide(0);
+    });
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.opacity = (i === index) ? "1" : "0";
+        slide.style.transform = (i === index) 
+          ? `translateX(-50%) rotate(${angles[i]}deg)` 
+          : "translateX(-50%) rotate(0deg)";
+      });
+
+      current = index;
+
+      if (index < slides.length - 1) {
+        setTimeout(() => showSlide(index + 1), 5000);
+      } else {
+        // After last photo -> final wish
+        setTimeout(() => {
+          typeWriter(document.getElementById("finalMessage"), "💖 Always Stay Happy & Blessed! 💖", 100);
+        }, 5000);
+      }
+    }
+
+    // Generate balloons
+    const balloonColors=['#ff9acb','#ffd1e8','#ffc9ee','#ffb3da','#ff80bf'];
+    for(let i=0;i<15;i++){
+      const b=document.createElement('div');
+      b.className='balloon';
+      b.style.left=Math.random()*100+'%';
+      b.style.top=(60+Math.random()*30)+'%';
+      b.style.background=balloonColors[i%balloonColors.length];
+      b.style.animationDuration=(5+Math.random()*4)+'s';
+      document.getElementById('balloons').appendChild(b);
+    }
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
